@@ -26,6 +26,7 @@ public class TicketEntity implements Serializable {
     private BigDecimal price;
     private LocalDate departureDate;
     private LocalDate purchaseDate;
+    private LocalDate arrivalDate;
 
     //Muchos tickets a un solo vuelo
     @ManyToOne

@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @SpringBootApplication
@@ -68,11 +70,57 @@ public class BestTravelApplication implements CommandLineRunner {
 		hotelRepository.findByPriceBetween(BigDecimal.valueOf(100), BigDecimal.valueOf(200)).forEach(
 				System.out::println
 		);
-		*/
 
 		hotelRepository.findByRatingGreaterThan(3).forEach(
 				System.out::println
 		);
+
+		HotelEntity hotel = hotelRepository.findByReservationId(UUID.fromString("12345678-1234-5678-1234-567812345678")).get();
+		System.out.println(hotel);
+		*/
+
+		CustomerEntity customer = customerRepository.findById("GOTW771012HMRGR087").get();
+		log.info("Clien name: " + customer.getFullName());
+
+		TourEntity tour = TourEntity.builder()
+				.customer(customer).build();
+
+		FlyEntity fly = flyRepository.findById(11L).get();
+		log.info("Vuelo: "+ fly.getOriginName() + " - " + fly.getDestinyName());
+		HotelEntity hotel = hotelRepository.findById(3L).get();
+		log.info("Hotel: " + hotel.getName());
+		TicketEntity ticket = TicketEntity.builder()
+				.id(UUID.randomUUID())
+				.price(fly.getPrice().multiply(BigDecimal.TEN))
+				.arrivalDate(LocalDate.now())
+				.departureDate(LocalDate.now())
+				.purchaseDate(LocalDate.now())
+				.customer(customer)
+				.tour(tour)
+				.fly(fly)
+				.build();
+
+		ReservationEntity reservation = ReservationEntity.builder()
+				.id(UUID.randomUUID())
+				.dateTimeReservation(LocalDateTime.now())
+				.dateEnd(LocalDate.now().plusDays(2))
+				.dateStart(LocalDate.now().plusDays(1))
+				.hotel(hotel)
+				.customer(customer)
+				.tour(tour)
+				.totalDays(1)
+				.price(hotel.getPrice().multiply(BigDecimal.TEN))
+				.build();
+
+		tour.addTicket(ticket);
+		tour.updateTickets();
+
+		tour.addReservations(reservation);
+		tour.updateReservation();
+
+		TourEntity tourSave = this.tourRepository.save(tour);
+
+		this.tourRepository.deleteById(tourSave.getId());
 
 
 	}
