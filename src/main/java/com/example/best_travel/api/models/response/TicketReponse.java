@@ -17,9 +17,9 @@ import java.util.UUID;
 @Builder
 public class TicketReponse implements Serializable {
 
-    private UUID uuid;
-    private LocalDateTime departureDate;
-    private LocalDateTime arrivalDate;
+    private UUID id;
+    private LocalDate departureDate;
+    private LocalDate arrivalDate;
     private LocalDate purchaseDate;
     private BigDecimal price;
     private FlyResponse fly;

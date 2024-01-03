@@ -63,17 +63,35 @@ public class TicketService implements ITicketService {
 
     @Override
     public TicketReponse read(UUID uuid) {
-        return null;
+        TicketEntity ticketFromDB = this.ticketRepository.findById(uuid)
+                .orElseThrow();
+        return this.entityToResponse(ticketFromDB);
     }
 
     @Override
     public TicketReponse update(TicketRequest request, UUID uuid) {
-        return null;
+
+        TicketEntity ticketTOUpdate = ticketRepository.findById(uuid)
+                .orElseThrow();
+
+        FlyEntity fly = flyRepository.findById(request.getIdFly())
+                .orElseThrow();
+
+        ticketTOUpdate.setFly(fly);
+        ticketTOUpdate.setPrice(BigDecimal.valueOf(0.25));
+        ticketTOUpdate.setArrivalDate(LocalDate.now());
+        ticketTOUpdate.setDepartureDate(LocalDate.now());
+
+        TicketEntity ticketUpdate = this.ticketRepository.save(ticketTOUpdate);
+        log.info("Actualizado " + ticketUpdate);
+        return this.entityToResponse(ticketUpdate);
     }
 
     @Override
     public void delete(UUID uuid) {
-
+        TicketEntity ticketToDelete = ticketRepository.findById(uuid)
+                .orElseThrow();
+        this.ticketRepository.delete(ticketToDelete);
     }
 
     private TicketReponse entityToResponse(TicketEntity entity){
@@ -81,6 +99,15 @@ public class TicketService implements ITicketService {
         BeanUtils.copyProperties(entity, ticketReponse);
         FlyResponse flyResponse = new FlyResponse();
         BeanUtils.copyProperties(entity, flyResponse);
+        flyResponse.setId(entity.getFly().getId());
+        flyResponse.setOriginLat(entity.getFly().getOriginLat());
+        flyResponse.setOriginLng(entity.getFly().getOriginLng());
+        flyResponse.setDestinyLat(entity.getFly().getDestinyLat());
+        flyResponse.setDestinyLng(entity.getFly().getDestinyLng());
+        flyResponse.setOriginName(entity.getFly().getOriginName());
+        flyResponse.setDestinyName(entity.getFly().getDestinyName());
+        flyResponse.setAeroLine(entity.getFly().getAeroLine());
+        flyResponse.setPrice(entity.getFly().getPrice());
         ticketReponse.setFly(flyResponse);
         return ticketReponse;
     }
