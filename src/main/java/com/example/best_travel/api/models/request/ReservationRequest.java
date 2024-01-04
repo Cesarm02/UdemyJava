@@ -12,4 +12,8 @@ import java.io.Serializable;
 @Data
 @Builder
 public class ReservationRequest implements Serializable {
+
+    private String idClient;
+    private Long idHotel;
+
 }

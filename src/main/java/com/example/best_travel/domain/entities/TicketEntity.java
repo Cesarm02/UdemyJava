@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity(name="ticket")
@@ -21,9 +22,9 @@ public class TicketEntity implements Serializable {
     @Id
     private UUID id;
     private BigDecimal price;
-    private LocalDate departureDate;
+    private LocalDateTime departureDate;
     private LocalDate purchaseDate;
-    private LocalDate arrivalDate;
+    private LocalDateTime arrivalDate;
 
     //Muchos tickets a un solo vuelo
     @ManyToOne(fetch = FetchType.LAZY)
