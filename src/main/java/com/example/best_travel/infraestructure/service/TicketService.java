@@ -120,5 +120,5 @@ public class TicketService implements ITicketService {
         return fly.getPrice().add(fly.getPrice().multiply(charger_price_percentage));
     }
 
-    private static final BigDecimal charger_price_percentage = BigDecimal.valueOf(0.25);
+    public static final BigDecimal charger_price_percentage = BigDecimal.valueOf(0.25);
 }

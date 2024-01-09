@@ -89,7 +89,7 @@ public class ReservationService implements IReservationService {
         reservationRepository.delete(reseravtionToDelete);
     }
 
-    private static final BigDecimal charges_price_reservation = BigDecimal.valueOf(0.20);
+    public static final BigDecimal charges_price_reservation = BigDecimal.valueOf(0.20);
 
     private ReservationResponse entityToResponse(ReservationEntity entity){
         ReservationResponse response = new ReservationResponse();

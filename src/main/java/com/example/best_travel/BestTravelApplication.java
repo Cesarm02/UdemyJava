@@ -77,7 +77,6 @@ public class BestTravelApplication implements CommandLineRunner {
 
 		HotelEntity hotel = hotelRepository.findByReservationId(UUID.fromString("12345678-1234-5678-1234-567812345678")).get();
 		System.out.println(hotel);
-		*/
 
 		CustomerEntity customer = customerRepository.findById("GOTW771012HMRGR087").get();
 		log.info("Clien name: " + customer.getFullName());
@@ -121,7 +120,9 @@ public class BestTravelApplication implements CommandLineRunner {
 		TourEntity tourSave = this.tourRepository.save(tour);
 
 		this.tourRepository.deleteById(tourSave.getId());
+			*/
 
 
 	}
+
 }

@@ -42,6 +42,32 @@ public class TourEntity {
     @JoinColumn(name = "id_customer")
     private CustomerEntity customer;
 
+    @PrePersist
+    @PreRemove
+    public void updateFk(){
+        this.reservations.forEach(reservation -> reservation.setTour(this));
+        this.tickets.forEach(ticket -> ticket.setTour(this));
+
+    }
+
+    public void removeTicket(UUID id){
+        tickets.forEach(
+                ticket-> {
+                    if(ticket.getId().equals(id)){
+                        ticket.setTour(null);
+                    }
+                }
+        );
+    }
+
+    public void addTicket(TicketEntity ticket){
+        if(Objects.isNull(this.tickets))
+            this.tickets = new HashSet<>();
+        this.tickets.add(ticket);
+        this.tickets.forEach(ticket1 -> ticket1.setTour(this));
+    }
+
+    /*
     //Antes de reover
     //@PreRemove
     //Antes de actualizar
@@ -80,5 +106,5 @@ public class TourEntity {
 
     public void updateReservation(){
         this.reservations.forEach(ticket -> ticket.setTour(this));
-    }
+    }*/
 }
