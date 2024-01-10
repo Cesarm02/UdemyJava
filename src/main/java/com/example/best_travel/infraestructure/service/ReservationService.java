@@ -10,6 +10,7 @@ import com.example.best_travel.domain.repositories.CustomerRepository;
 import com.example.best_travel.domain.repositories.HotelRepository;
 import com.example.best_travel.domain.repositories.ReservationRepository;
 import com.example.best_travel.infraestructure.abstrat.IReservationService;
+import com.example.best_travel.infraestructure.helper.CustomerHelper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +32,8 @@ public class ReservationService implements IReservationService {
     private final CustomerRepository customerRepository;
     private final ReservationRepository reservationRepository;
 
+    private final CustomerHelper customerHelper;
+
     @Override
     public ReservationResponse create(ReservationRequest request) {
         HotelEntity hotel = hotelRepository.findById(request.getIdHotel())
@@ -49,6 +52,7 @@ public class ReservationService implements IReservationService {
                 .build();
 
         ReservationEntity reservtionPersist = reservationRepository.save(reservationToPersist);
+        this.customerHelper.incrase(customer.getDni(), ReservationService.class);
 
         return entityToResponse(reservtionPersist);
     }

@@ -8,6 +8,7 @@ import com.example.best_travel.domain.repositories.FlyRepository;
 import com.example.best_travel.domain.repositories.HotelRepository;
 import com.example.best_travel.domain.repositories.TourRepository;
 import com.example.best_travel.infraestructure.abstrat.ITourService;
+import com.example.best_travel.infraestructure.helper.CustomerHelper;
 import com.example.best_travel.infraestructure.helper.TourHelper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class TourService implements ITourService {
     private final CustomerRepository customerRepository;
     private final TourHelper tourHelper;
 
+    private final CustomerHelper customerHelper;
 
     @Override
     public TourResponse create(TourRequest request) {
@@ -55,6 +57,9 @@ public class TourService implements ITourService {
                 .build();
 
         var tourSaved = tourRepository.save(tourToSave);
+
+        this.customerHelper.incrase(customer.getDni(), TourService.class);
+
         return TourResponse.builder()
                 .reservationIds(tourSaved.getReservations().stream().map(ReservationEntity::getId).collect(Collectors.toSet()))
                 .ticketsIds(tourSaved.getTickets().stream().map(TicketEntity::getId).collect(Collectors.toSet()))
@@ -100,12 +105,22 @@ public class TourService implements ITourService {
 
     @Override
     public void removeReservation(Long tourId, UUID reservationId) {
-
+        var tourUpdate = tourRepository.findById(tourId)
+                .orElseThrow();
+        tourUpdate.removeReservation(reservationId);
+        tourRepository.save(tourUpdate);
     }
 
     @Override
-    public UUID addReservation(Long flyId, Long reservationId) {
-        return null;
+    public UUID addReservation(Long flyId, Long reservationId, Integer totalDays) {
+        var tourUpdate = tourRepository.findById(reservationId)
+                .orElseThrow();
+        var hotel = this.hotelRepository.findById(flyId)
+                .orElseThrow();
+        var reservation = tourHelper.createReservation(hotel, tourUpdate.getCustomer(), totalDays);
+        tourUpdate.addReservation(reservation);
+        tourRepository.save(tourUpdate);
+        return reservation.getId();
     }
 
 

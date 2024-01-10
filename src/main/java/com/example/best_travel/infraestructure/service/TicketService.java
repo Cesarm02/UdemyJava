@@ -11,6 +11,7 @@ import com.example.best_travel.domain.repositories.FlyRepository;
 import com.example.best_travel.domain.repositories.ReservationRepository;
 import com.example.best_travel.domain.repositories.TicketRepository;
 import com.example.best_travel.infraestructure.abstrat.ITicketService;
+import com.example.best_travel.infraestructure.helper.CustomerHelper;
 import com.example.best_travel.util.BestTravelUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class TicketService implements ITicketService {
     private final CustomerRepository customerRepository;
     private final TicketRepository ticketRepository;
 
+    private final CustomerHelper customerHelper;
 
     @Override
     public TicketReponse create(TicketRequest request) {
@@ -57,6 +59,8 @@ public class TicketService implements ITicketService {
                 .build();
 
         TicketEntity ticketGuardado = this.ticketRepository.save(ticket);
+        this.customerHelper.incrase(customer.getDni(), TicketService.class);
+
         log.info("Ticket guardado "  + ticket);
 
         return this.entityToResponse(ticket);
