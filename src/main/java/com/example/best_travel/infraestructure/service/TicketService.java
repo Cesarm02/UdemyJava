@@ -11,6 +11,7 @@ import com.example.best_travel.domain.repositories.FlyRepository;
 import com.example.best_travel.domain.repositories.ReservationRepository;
 import com.example.best_travel.domain.repositories.TicketRepository;
 import com.example.best_travel.infraestructure.abstrat.ITicketService;
+import com.example.best_travel.infraestructure.helper.BlackListHelper;
 import com.example.best_travel.infraestructure.helper.CustomerHelper;
 import com.example.best_travel.util.BestTravelUtil;
 import lombok.AllArgsConstructor;
@@ -36,9 +37,12 @@ public class TicketService implements ITicketService {
     private final TicketRepository ticketRepository;
 
     private final CustomerHelper customerHelper;
+    private final BlackListHelper blackListHelper;
 
     @Override
     public TicketReponse create(TicketRequest request) {
+        blackListHelper.isInBlackListCustomer(request.getIdClient());
+
         FlyEntity fly = flyRepository.findById(request.getIdFly())
                 .orElseThrow(
                         IllegalStateException::new
