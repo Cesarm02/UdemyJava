@@ -17,7 +17,7 @@ public class FordibbenCustomerHandler {
     @ExceptionHandler(FordibbenCustomerException.class)
     public BaseErrorResponse handleIdNotFound(FordibbenCustomerException exception){
         return ErrorResponse.builder()
-                .message(exception.getMessage())
+                .error(exception.getMessage())
                 .status(HttpStatus.FORBIDDEN.name())
                 .errorCode(HttpStatus.FORBIDDEN.value())
                 .build();

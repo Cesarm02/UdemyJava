@@ -1,9 +1,8 @@
 package com.example.best_travel.api.controllers;
 
-import com.example.best_travel.api.models.response.FlyResponse;
 import com.example.best_travel.api.models.response.HotelResponse;
 import com.example.best_travel.infraestructure.abstrat.IHotelService;
-import com.example.best_travel.util.SortType;
+import com.example.best_travel.util.enums.SortType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

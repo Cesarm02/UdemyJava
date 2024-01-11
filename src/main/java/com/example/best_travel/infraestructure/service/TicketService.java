@@ -14,6 +14,8 @@ import com.example.best_travel.infraestructure.abstrat.ITicketService;
 import com.example.best_travel.infraestructure.helper.BlackListHelper;
 import com.example.best_travel.infraestructure.helper.CustomerHelper;
 import com.example.best_travel.util.BestTravelUtil;
+import com.example.best_travel.util.enums.Tables;
+import com.example.best_travel.util.exceptions.IdNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -73,7 +75,7 @@ public class TicketService implements ITicketService {
     @Override
     public TicketReponse read(UUID uuid) {
         TicketEntity ticketFromDB = this.ticketRepository.findById(uuid)
-                .orElseThrow();
+                .orElseThrow(() -> new IdNotFoundException(Tables.ticket.name()));
         return this.entityToResponse(ticketFromDB);
     }
 
@@ -81,10 +83,10 @@ public class TicketService implements ITicketService {
     public TicketReponse update(TicketRequest request, UUID uuid) {
 
         TicketEntity ticketTOUpdate = ticketRepository.findById(uuid)
-                .orElseThrow();
+                .orElseThrow(() -> new IdNotFoundException(Tables.ticket.name()));
 
         FlyEntity fly = flyRepository.findById(request.getIdFly())
-                .orElseThrow();
+                .orElseThrow(() -> new IdNotFoundException(Tables.fly.name()));
 
         ticketTOUpdate.setFly(fly);
         ticketTOUpdate.setPrice(fly.getPrice().add(fly.getPrice().multiply(charger_price_percentage)));
@@ -99,7 +101,7 @@ public class TicketService implements ITicketService {
     @Override
     public void delete(UUID uuid) {
         TicketEntity ticketToDelete = ticketRepository.findById(uuid)
-                .orElseThrow();
+                .orElseThrow(() -> new IdNotFoundException(Tables.ticket.name()));
         this.ticketRepository.delete(ticketToDelete);
     }
 
