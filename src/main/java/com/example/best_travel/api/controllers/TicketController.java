@@ -1,8 +1,14 @@
 package com.example.best_travel.api.controllers;
 
 import com.example.best_travel.api.models.request.TicketRequest;
+import com.example.best_travel.api.models.response.ErrorResponse;
 import com.example.best_travel.api.models.response.TicketReponse;
 import com.example.best_travel.infraestructure.abstrat.ITicketService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +21,21 @@ import java.util.UUID;
 @RestController
 @RequestMapping(path = "ticket")
 @AllArgsConstructor
+@Tag(name = "Ticket")
+
 public class TicketController {
 
     private final ITicketService ticketService;
 
+    @ApiResponse(
+            responseCode = "400",
+            description = "When the request have a field invalid we response this",
+            content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }
+    )
     @PostMapping
-    public ResponseEntity<TicketReponse> postTicket(@RequestBody TicketRequest ticketRequest){
+    public ResponseEntity<TicketReponse> postTicket(@Valid  @RequestBody TicketRequest ticketRequest){
         return ResponseEntity.ok(ticketService.create(ticketRequest));
     }
 
@@ -30,7 +45,7 @@ public class TicketController {
     }
 
     @PutMapping(path = "{uuid}")
-    public ResponseEntity<TicketReponse> putTicket(@PathVariable UUID uuid, @RequestBody TicketRequest ticketRequest){
+    public ResponseEntity<TicketReponse> putTicket(@Valid @PathVariable UUID uuid, @RequestBody TicketRequest ticketRequest){
         return ResponseEntity.ok(ticketService.update(ticketRequest, uuid));
     }
 

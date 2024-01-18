@@ -10,6 +10,7 @@ import com.example.best_travel.domain.repositories.CustomerRepository;
 import com.example.best_travel.domain.repositories.HotelRepository;
 import com.example.best_travel.domain.repositories.ReservationRepository;
 import com.example.best_travel.infraestructure.abstrat.IReservationService;
+import com.example.best_travel.infraestructure.helper.ApiCurrencyConnectorHelper;
 import com.example.best_travel.infraestructure.helper.BlackListHelper;
 import com.example.best_travel.infraestructure.helper.CustomerHelper;
 import com.example.best_travel.util.exceptions.IdNotFoundException;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Currency;
 import java.util.UUID;
 
 @Transactional
@@ -36,6 +38,8 @@ public class ReservationService implements IReservationService {
 
     private final CustomerHelper customerHelper;
     private final BlackListHelper blackListHelper;
+
+    private final ApiCurrencyConnectorHelper apiCurrencyConnectorHelper;
 
     @Override
     public ReservationResponse create(ReservationRequest request) {
@@ -112,8 +116,14 @@ public class ReservationService implements IReservationService {
 
 
     @Override
-    public BigDecimal findPrice(Long hotelId) {
+    public BigDecimal findPrice(Long hotelId, Currency currency) {
         HotelEntity hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new IdNotFoundException("Hotel"));
-        return hotel.getPrice().add(hotel.getPrice().multiply(charges_price_reservation));
+        var priceInDollar =  hotel.getPrice().add(hotel.getPrice().multiply(charges_price_reservation));
+        if(currency.equals(Currency.getInstance("USD")))
+            return priceInDollar;
+        var currencyDto = this.apiCurrencyConnectorHelper.getCurrencyDto(currency);
+        log.info("API currency in {}, response: {} ", currencyDto.getExchangeDate().toString(), currencyDto.getRates());
+        return priceInDollar.multiply(currencyDto.getRates().get(currency));
+
     }
 }

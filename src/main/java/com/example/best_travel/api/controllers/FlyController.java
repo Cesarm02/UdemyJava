@@ -3,6 +3,7 @@ package com.example.best_travel.api.controllers;
 import com.example.best_travel.api.models.response.FlyResponse;
 import com.example.best_travel.infraestructure.abstrat.IFlyService;
 import com.example.best_travel.util.enums.SortType;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ import java.util.Set;
 @RestController
 @RequestMapping(path = "fly")
 @AllArgsConstructor
+@Tag(name = "Fly")
+
 public class FlyController {
 
     private final IFlyService flyService;
