@@ -1,12 +1,9 @@
 package com.example.best_travel.api.controllers;
 
 import com.example.best_travel.api.models.request.ReservationRequest;
-import com.example.best_travel.api.models.request.TicketRequest;
 import com.example.best_travel.api.models.response.ErrorResponse;
 import com.example.best_travel.api.models.response.ReservationResponse;
-import com.example.best_travel.api.models.response.TicketReponse;
 import com.example.best_travel.infraestructure.abstrat.IReservationService;
-import com.example.best_travel.infraestructure.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -61,10 +58,10 @@ public class ReservationController {
 
     @Operation(summary = "Return a reservation price")
     @GetMapping
-    public ResponseEntity<Map<String, BigDecimal>> getReservationPrice(@RequestParam Long flyId, @RequestHeader(required = false) Currency currency){
+    public ResponseEntity<Map<String, BigDecimal>> getReservationPrice(@RequestParam Long hotelId, @RequestHeader(required = false) Currency currency){
         if(Objects.isNull(currency))
             currency = Currency.getInstance("USD");
-        return ResponseEntity.ok(Collections.singletonMap("hotelPrice", reservationService.findPrice(flyId, currency)));
+        return ResponseEntity.ok(Collections.singletonMap("hotelPrice", reservationService.findPrice(hotelId, currency)));
     }
 
 
