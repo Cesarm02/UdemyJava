@@ -10,6 +10,7 @@ import com.example.best_travel.domain.repositories.TourRepository;
 import com.example.best_travel.infraestructure.abstrat.ITourService;
 import com.example.best_travel.infraestructure.helper.BlackListHelper;
 import com.example.best_travel.infraestructure.helper.CustomerHelper;
+import com.example.best_travel.infraestructure.helper.EmailHelper;
 import com.example.best_travel.infraestructure.helper.TourHelper;
 import com.example.best_travel.util.enums.Tables;
 import com.example.best_travel.util.exceptions.IdNotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,6 +39,7 @@ public class TourService implements ITourService {
 
     private final CustomerHelper customerHelper;
     private final BlackListHelper blackListHelper;
+    private final EmailHelper emailHelper;
     @Override
     public TourResponse create(TourRequest request) {
 
@@ -65,6 +68,10 @@ public class TourService implements ITourService {
         var tourSaved = tourRepository.save(tourToSave);
 
         this.customerHelper.incrase(customer.getDni(), TourService.class);
+
+
+        if(Objects.nonNull(request.getEmail()))
+            this.emailHelper.sendMail(request.getEmail(), customer.getFullName(), Tables.tour.name());
 
         return TourResponse.builder()
                 .reservationIds(tourSaved.getReservations().stream().map(ReservationEntity::getId).collect(Collectors.toSet()))

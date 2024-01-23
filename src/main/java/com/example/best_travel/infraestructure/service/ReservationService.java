@@ -13,6 +13,8 @@ import com.example.best_travel.infraestructure.abstrat.IReservationService;
 import com.example.best_travel.infraestructure.helper.ApiCurrencyConnectorHelper;
 import com.example.best_travel.infraestructure.helper.BlackListHelper;
 import com.example.best_travel.infraestructure.helper.CustomerHelper;
+import com.example.best_travel.infraestructure.helper.EmailHelper;
+import com.example.best_travel.util.enums.Tables;
 import com.example.best_travel.util.exceptions.IdNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Currency;
+import java.util.Objects;
 import java.util.UUID;
 
 @Transactional
@@ -40,6 +43,8 @@ public class ReservationService implements IReservationService {
     private final BlackListHelper blackListHelper;
 
     private final ApiCurrencyConnectorHelper apiCurrencyConnectorHelper;
+
+    private final EmailHelper emailHelper;
 
     @Override
     public ReservationResponse create(ReservationRequest request) {
@@ -63,6 +68,9 @@ public class ReservationService implements IReservationService {
 
         ReservationEntity reservtionPersist = reservationRepository.save(reservationToPersist);
         this.customerHelper.incrase(customer.getDni(), ReservationService.class);
+
+        if(Objects.nonNull(request.getEmail()))
+            this.emailHelper.sendMail(request.getEmail(), customer.getFullName(), Tables.reservation.name());
 
         return entityToResponse(reservtionPersist);
     }

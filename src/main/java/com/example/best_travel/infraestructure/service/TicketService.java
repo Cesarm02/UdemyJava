@@ -13,6 +13,7 @@ import com.example.best_travel.domain.repositories.TicketRepository;
 import com.example.best_travel.infraestructure.abstrat.ITicketService;
 import com.example.best_travel.infraestructure.helper.BlackListHelper;
 import com.example.best_travel.infraestructure.helper.CustomerHelper;
+import com.example.best_travel.infraestructure.helper.EmailHelper;
 import com.example.best_travel.util.BestTravelUtil;
 import com.example.best_travel.util.enums.Tables;
 import com.example.best_travel.util.exceptions.IdNotFoundException;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Transactional
@@ -40,6 +42,8 @@ public class TicketService implements ITicketService {
 
     private final CustomerHelper customerHelper;
     private final BlackListHelper blackListHelper;
+
+    private final EmailHelper emailHelper;
 
     @Override
     public TicketReponse create(TicketRequest request) {
@@ -66,8 +70,10 @@ public class TicketService implements ITicketService {
 
         TicketEntity ticketGuardado = this.ticketRepository.save(ticket);
         this.customerHelper.incrase(customer.getDni(), TicketService.class);
-
         log.info("Ticket guardado "  + ticket);
+
+        if(Objects.nonNull(request.getEmail()))
+            this.emailHelper.sendMail(request.getEmail(), customer.getFullName(), Tables.ticket.name());
 
         return this.entityToResponse(ticket);
     }
