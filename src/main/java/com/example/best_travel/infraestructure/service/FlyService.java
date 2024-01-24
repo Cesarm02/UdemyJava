@@ -1,5 +1,6 @@
 package com.example.best_travel.infraestructure.service;
 
+import com.example.best_travel.api.models.CacheConstants;
 import com.example.best_travel.api.models.response.FlyResponse;
 import com.example.best_travel.domain.entities.FlyEntity;
 import com.example.best_travel.domain.repositories.FlyRepository;
@@ -8,6 +9,7 @@ import com.example.best_travel.util.enums.SortType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -45,6 +47,7 @@ public class FlyService implements IFlyService {
     }
 
     @Override
+    @Cacheable(value = CacheConstants.FLY_CACHE_NAME)
     public Set<FlyResponse> readLessPrice(BigDecimal price) {
         return flyRepository.selectLessPrice(price)
                 .stream().map(this::entityToResponse)
