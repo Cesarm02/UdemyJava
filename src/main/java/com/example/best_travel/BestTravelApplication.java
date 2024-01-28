@@ -1,16 +1,12 @@
 package com.example.best_travel;
 
-import com.example.best_travel.domain.entities.*;
-import com.example.best_travel.domain.repositories.*;
+import com.example.best_travel.domain.repositories.jpa.*;
+import com.example.best_travel.domain.repositories.mongo.AppUserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @SpringBootApplication
 @Slf4j
@@ -23,13 +19,17 @@ public class BestTravelApplication implements CommandLineRunner {
 	private final ReservationRepository reservationRepository;
 	private final CustomerRepository customerRepository;
 
-	public BestTravelApplication(HotelRepository hotelRepository, FlyRepository flyRepository, TourRepository tourRepository, TicketRepository ticketRepository, ReservationRepository reservationRepository, CustomerRepository customerRepository) {
+	@Autowired
+	private final AppUserRepository userRepository;
+
+	public BestTravelApplication(HotelRepository hotelRepository, FlyRepository flyRepository, TourRepository tourRepository, TicketRepository ticketRepository, ReservationRepository reservationRepository, CustomerRepository customerRepository, AppUserRepository userRepository) {
 		this.hotelRepository = hotelRepository;
 		this.flyRepository = flyRepository;
 		this.tourRepository = tourRepository;
 		this.ticketRepository = ticketRepository;
 		this.reservationRepository = reservationRepository;
 		this.customerRepository = customerRepository;
+		this.userRepository = userRepository;
 	}
 
 	public static void main(String[] args) {
@@ -120,8 +120,10 @@ public class BestTravelApplication implements CommandLineRunner {
 		TourEntity tourSave = this.tourRepository.save(tour);
 
 		this.tourRepository.deleteById(tourSave.getId());
-			*/
 
+		System.out.println(this.userRepository.findByUsername("heisenberg"));
+		this.userRepository.findAll().forEach(System.out::println);
+			*/
 
 	}
 

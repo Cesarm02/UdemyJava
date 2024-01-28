@@ -3,13 +3,13 @@ package com.example.best_travel.infraestructure.service;
 import com.example.best_travel.api.models.request.TicketRequest;
 import com.example.best_travel.api.models.response.FlyResponse;
 import com.example.best_travel.api.models.response.TicketReponse;
-import com.example.best_travel.domain.entities.CustomerEntity;
-import com.example.best_travel.domain.entities.FlyEntity;
-import com.example.best_travel.domain.entities.TicketEntity;
-import com.example.best_travel.domain.repositories.CustomerRepository;
-import com.example.best_travel.domain.repositories.FlyRepository;
-import com.example.best_travel.domain.repositories.ReservationRepository;
-import com.example.best_travel.domain.repositories.TicketRepository;
+import com.example.best_travel.domain.entities.jpa.CustomerEntity;
+import com.example.best_travel.domain.entities.jpa.FlyEntity;
+import com.example.best_travel.domain.entities.jpa.TicketEntity;
+import com.example.best_travel.domain.repositories.jpa.CustomerRepository;
+import com.example.best_travel.domain.repositories.jpa.FlyRepository;
+import com.example.best_travel.domain.repositories.jpa.ReservationRepository;
+import com.example.best_travel.domain.repositories.jpa.TicketRepository;
 import com.example.best_travel.infraestructure.abstrat.ITicketService;
 import com.example.best_travel.infraestructure.helper.BlackListHelper;
 import com.example.best_travel.infraestructure.helper.CustomerHelper;
@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 

@@ -2,8 +2,8 @@ package com.example.best_travel.infraestructure.service;
 
 import com.example.best_travel.api.models.CacheConstants;
 import com.example.best_travel.api.models.response.HotelResponse;
-import com.example.best_travel.domain.entities.HotelEntity;
-import com.example.best_travel.domain.repositories.HotelRepository;
+import com.example.best_travel.domain.entities.jpa.HotelEntity;
+import com.example.best_travel.domain.repositories.jpa.HotelRepository;
 import com.example.best_travel.infraestructure.abstrat.IHotelService;
 import com.example.best_travel.util.enums.SortType;
 import lombok.AllArgsConstructor;

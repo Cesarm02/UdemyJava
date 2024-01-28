@@ -1,6 +1,5 @@
 package com.example.best_travel.api.models.response;
 
-import com.example.best_travel.domain.entities.HotelEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.example.best_travel.domain.entities;
+package com.example.best_travel.domain.entities.jpa;
 
 import com.example.best_travel.util.enums.AeroLine;
 import jakarta.persistence.*;

@@ -2,11 +2,11 @@ package com.example.best_travel.infraestructure.service;
 
 import com.example.best_travel.api.models.request.TourRequest;
 import com.example.best_travel.api.models.response.TourResponse;
-import com.example.best_travel.domain.entities.*;
-import com.example.best_travel.domain.repositories.CustomerRepository;
-import com.example.best_travel.domain.repositories.FlyRepository;
-import com.example.best_travel.domain.repositories.HotelRepository;
-import com.example.best_travel.domain.repositories.TourRepository;
+import com.example.best_travel.domain.entities.jpa.*;
+import com.example.best_travel.domain.repositories.jpa.CustomerRepository;
+import com.example.best_travel.domain.repositories.jpa.FlyRepository;
+import com.example.best_travel.domain.repositories.jpa.HotelRepository;
+import com.example.best_travel.domain.repositories.jpa.TourRepository;
 import com.example.best_travel.infraestructure.abstrat.ITourService;
 import com.example.best_travel.infraestructure.helper.BlackListHelper;
 import com.example.best_travel.infraestructure.helper.CustomerHelper;
