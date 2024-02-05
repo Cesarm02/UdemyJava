@@ -1,5 +1,7 @@
 package com.example.best_travel.config;
 
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,9 +23,16 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
 import java.util.UUID;
 
 @Configuration
@@ -96,7 +105,7 @@ public class SecurityConfig {
         var registeredClient = RegisteredClient
                 .withId(UUID.randomUUID().toString())
                 .clientId(clientId)
-                .clientSecret(clientSecret)
+                .clientSecret(encoder.encode(clientSecret))
                 .scope(scopeRead)
                 .scope(scopeWrite)
                 .redirectUri(redirectUri1)
@@ -120,14 +129,50 @@ public class SecurityConfig {
     }
 
     @Bean
+    public JWKSource<SecurityContext> jwkSource(){
+        var rsaKey = generateKeys();
+        var jwkSet = new JWKSet(rsaKey);
+        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+    }
+
+    @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
-    
+
+    @Bean
+    public TokenSettings tokenSettings(){
+        return TokenSettings.builder()
+                .refreshTokenTimeToLive(Duration.ofHours(8))
+                .build();
+    }
+
+    private static KeyPair generateRsa(){
+        KeyPair keyPair = null;
+        try{
+            var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+            keyPair = keyPairGenerator.generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+        return keyPair;
+    }
+
+    private static RSAKey generateKeys(){
+        var keyPair = generateRsa();
+        RSAPublicKey rsaPublicKey = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
+        return new RSAKey.Builder(rsaPublicKey).privateKey(rsaPrivateKey)
+                .keyID(UUID.randomUUID().toString())
+                .build();
+
+    }
+
     private static final String[] PUBLIC_RESOURCES = {"/fly/**","/hotel/**","/swagger-ui/**", "/.well-known/**, ", "/v3/api-docs/**"};
     private static final String[] USER_RESOURCES = {"/tour/**","/ticket/**","/reservation/**"};
     private static final String[] ADMIN_RESOURCES = {"/user/**", "/report/**"};
     private static final String LOGIN_RESOURCE = "/login";
-    private static final String ADMIN_ROLE = "ROLE_ADMIN";
+    private static final String ADMIN_ROLE = "ADMIN";
 
 }
