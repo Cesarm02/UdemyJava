@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @Slf4j
@@ -21,6 +22,9 @@ public class BestTravelApplication implements CommandLineRunner {
 
 	@Autowired
 	private final AppUserRepository userRepository;
+
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public BestTravelApplication(HotelRepository hotelRepository, FlyRepository flyRepository, TourRepository tourRepository, TicketRepository ticketRepository, ReservationRepository reservationRepository, CustomerRepository customerRepository, AppUserRepository userRepository) {
 		this.hotelRepository = hotelRepository;
@@ -123,8 +127,8 @@ public class BestTravelApplication implements CommandLineRunner {
 
 		System.out.println(this.userRepository.findByUsername("heisenberg"));
 		this.userRepository.findAll().forEach(System.out::println);
-			*/
-
+		this.userRepository.findAll()
+				.forEach(user-> System.out.println(this.bCryptPasswordEncoder.encode(user.getPassword())));
+				*/
 	}
-
 }
