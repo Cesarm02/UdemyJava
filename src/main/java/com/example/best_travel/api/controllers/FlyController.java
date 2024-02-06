@@ -24,7 +24,7 @@ public class FlyController {
     private final IFlyService flyService;
 
     @GetMapping
-    @Notify
+    @Notify(value = "Fly request")
     public ResponseEntity<Page<FlyResponse>> getAllFly(
             @RequestParam Integer page,
             @RequestParam Integer size,

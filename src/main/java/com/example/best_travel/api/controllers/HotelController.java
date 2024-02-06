@@ -2,6 +2,7 @@ package com.example.best_travel.api.controllers;
 
 import com.example.best_travel.api.models.response.HotelResponse;
 import com.example.best_travel.infraestructure.abstrat.IHotelService;
+import com.example.best_travel.util.annotations.Notify;
 import com.example.best_travel.util.enums.SortType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class HotelController {
     private final IHotelService hotelService;
 
     @GetMapping
+    @Notify(value = "Hotel request")
     public ResponseEntity<Page<HotelResponse>> getAllFly(
             @RequestParam Integer page,
             @RequestParam Integer size,

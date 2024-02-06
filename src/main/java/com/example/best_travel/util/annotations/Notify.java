@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.METHOD)
 public @interface Notify {
 
-    String value() default "files/notify.txt";
+    String value() default "best_travel/files/notify.txt";
 
 }

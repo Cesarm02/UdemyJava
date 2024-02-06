@@ -22,15 +22,16 @@ public class NotifyAspect {
         var args = joinPoint.getArgs();
         var size = args[1];
         var order = args[2] == null ? "None" :  args[2];
-        var text = String.format(LINE_FORMAT, LocalDateTime.now(), size.toString(), order.toString());
 
         var signature = (MethodSignature) joinPoint.getSignature();
         var method = signature.getMethod();
         var annotation = method.getAnnotation(Notify.class);
 
-        BestTravelUtil.writeNotification(text, annotation.value());
+        var text = String.format(LINE_FORMAT, LocalDateTime.now(), annotation.value(), size.toString(), order.toString());
+
+        BestTravelUtil.writeNotification(text, PATH);
     }
 
-    private static final String LINE_FORMAT = "At %s new request with size page %s add and order %s";
-
+    private static final String LINE_FORMAT = "At %s new %s with size page %s add and order %s";
+    private static final String PATH = "best_travel/files/notify.txt";
 }
